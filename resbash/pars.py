@@ -71,7 +71,11 @@ def main():
 	###################
 
 	url = 'https://resbash.ru'
-	r = requests.get(url+'/last-number/')
+	r = requests.get(url+'/gazeta/')
+	soup = BeautifulSoup(r.text, 'lxml')
+
+	gaz = str(soup.find('a', class_='gazeta-link').get('href'))
+	r = requests.get(url+gaz)
 	soup = BeautifulSoup(r.text, 'lxml')
 
 	#заголовки 
@@ -128,4 +132,7 @@ def main():
 	with open('out_pars.json', 'w', encoding='utf8') as f:
 		json.dump(pars, f, sort_keys=False,ensure_ascii=False,separators=(',', ': '))
 
-main()
+v = True
+while v == True:
+	main()
+	time.sleep(300)

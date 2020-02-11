@@ -30,7 +30,7 @@ def handle_dialog(res,req):
                 pars_file = json.load(f)
             nams = randint(6,14)
 
-            res['response'].update({'text':'text','tts':pars_file['news']['news-titel'][nams]})
+            res['response'].update({'text':pars_file['news']['news-titel'][nams],'tts':pars_file['news']['news-titel'][nams]})
             image = {'card':{'button':{'text':'text','url':pars_file['news']['news-link'][nams]},
             'type':'BigImage',
             'image_id': pars_file['news']['news-imgId'][nams],
@@ -42,13 +42,13 @@ def handle_dialog(res,req):
         elif req['request']['payload']['text'] == 'Последнии новости':
             with open('out_pars.json') as f:
                 pars_file = json.load(f)
-            last_news={'text':'text',
+            last_news={'text':'Последнии новости',
                 'card':{'type':'ItemsList','header':{'text':'Последнии новости'},'items':[]}
             }
 
             for i in range(5):
                 k = {
-                    'button':{'text':'text','url':pars_file['news']['news-link'][i]},
+                    'button':{'text':pars_file['news']['news-titel'][i],'url':pars_file['news']['news-link'][i]},
                     'title':pars_file['news']['news-titel'][i],
                     'tts':pars_file['news']['news-titel'][i],
                     'image_id':pars_file['news']['news-imgId'][i]}
@@ -61,16 +61,18 @@ def handle_dialog(res,req):
             last_news={'text':'Последний номер',
                 'card':{'type':'ItemsList','header':{'text':'Последний номер'},'items':[]}
             }
-
-            for i in range(5):
-                k = {
-                    'button':{'text':'text','url':pars_file['stat']['stat-link'][i]},
-                    'title':pars_file['stat']['stat-titel'][i],
-                    'discription':pars_file['stat']['stat-lid'][i],
-                    'tts': str(pars_file['stat']['stat-titel'][i])+'. '+str(pars_file['stat']['stat-lid'][i]),
-                    'image_id':pars_file['stat']['stat-imgId'][i]}
-                last_news['card']['items'].append(k)
-            res['response'].update(last_news)
+            if len(pars_file['stat']['stat-link'])>0:
+                for i in range(5):
+                    k = {
+                        'button':{'text':pars_file['stat']['stat-titel'][i],'url':pars_file['stat']['stat-link'][i]},
+                        'title':pars_file['stat']['stat-titel'][i],
+                        'discription':pars_file['stat']['stat-lid'][i],
+                        'tts': str(pars_file['stat']['stat-titel'][i])+'. '+str(pars_file['stat']['stat-lid'][i]),
+                        'image_id':pars_file['stat']['stat-imgId'][i]}
+                    last_news['card']['items'].append(k)
+                res['response'].update(last_news)
+            else:
+                res['response']['text'] = 'Извините, номер ещё не готов😥'
 
     else:
         text = req['request']['original_utterance']
@@ -80,7 +82,7 @@ def handle_dialog(res,req):
                 pars_file = json.load(f)
             nams = randint(6,14)
 
-            res['response'].update({'text':'text','tts':'text'})
+            res['response'].update({'text':pars_file['news']['news-titel'][nams],'tts':'text'})
             image = {'card':{'button':{'text':'text','url':pars_file['news']['news-link'][nams]},
             'type':'BigImage',
             'image_id': pars_file['news']['news-imgId'][nams],
@@ -89,41 +91,43 @@ def handle_dialog(res,req):
 
             res['response'].update(image)
 
-        elif text == 'Последний номер' or text == 'номер' or text == 'Номер' or text == 'Покажи последний номер' or text == 'Раскажи последний номер':
+        elif text == 'Последний номер' or text == 'номер' or text == 'Номер' or text == 'Покажи последний номер' or text == 'Раскажи последний номер' or text == 'Статьи' or text == 'статьи':
             with open('out_pars.json') as f:
                 pars_file = json.load(f)
             last_news={'text':'Последний номер',
                 'card':{'type':'ItemsList','header':{'text':'Последний номер'},'items':[]}
             }
-
-            for i in range(5):
-                k = {
-                    'button':{'text':'text','url':pars_file['news']['news-link'][i]},
-                    'title':pars_file['news']['news-titel'][i],
-                    'tts':str(pars_file['stat']['stat-titel'][i])+'. '+str(pars_file['stat']['stat-lid'][i]),
-                    'image_id':pars_file['news']['news-imgId'][i]}
-                last_news['card']['items'].append(k)
-            res['response'].update(last_news)
+            if len(pars_file['stat']['stat-link'])>0:
+                for i in range(5):
+                    k = {
+                        'button':{'text':pars_file['news']['news-titel'][i],'url':pars_file['news']['news-link'][i]},
+                        'title':pars_file['news']['news-titel'][i],
+                        'tts':str(pars_file['stat']['stat-titel'][i])+'. '+str(pars_file['stat']['stat-lid'][i]),
+                        'image_id':pars_file['news']['news-imgId'][i]}
+                    last_news['card']['items'].append(k)
+                res['response'].update(last_news)
+            else:
+                res['response']['text'] = 'Извините, номер ещё не готов😥'
 
         elif  text == 'Последнии новости' or text == 'последнии новости' or text == 'Новости' or text == 'новости'or text == 'Покажи последнии новости' or text == 'Раскажи последнии новости':
             with open('out_pars.json') as f:
                 pars_file = json.load(f)
-            last_news={'text':'text',
+            last_news={'text':'Последнии новости',
                 'card':{'type':'ItemsList','header':{'text':'Последнии новости'},'items':[]}
             }
 
             for i in range(5):
                 k = {
-                    'button':{'text':'text','url':pars_file['news']['news-link'][i]},
+                    'button':{'text':pars_file['news']['news-titel'][i],'url':pars_file['news']['news-link'][i]},
                     'title':pars_file['news']['news-titel'][i],
                     'tts':pars_file['news']['news-titel'][i],
                     'image_id':pars_file['news']['news-imgId'][i]}
                 last_news['card']['items'].append(k)
             res['response'].update(last_news)
 
-        else :
+        elif text == '':
             ## Если это первое сообщение — представляемся
-            hellp={'text':'text','card':{'type':'ItemsList','header':{'text':'Привет, я навык газетыРБ🔥🔥🔥\nИ вот что я могу','tts':'Привет, я навык газетыРБ. Вот что я могу'},
+            hellp={'text':'Привет, я навык газетыРБ','card':{'type':'ItemsList','header':{'text':'Привет, я навык газетыРБ🔥🔥🔥','tts':'Привет, я навык газетыРБ'},
                 'items':[
                     {'button':{'text':'Случайная новость','payload':{'text':'Случайная новость'}},
                         'title':'Случайная новость🎲',
@@ -140,7 +144,25 @@ def handle_dialog(res,req):
                 ]
             }}
             res['response'].update(hellp)
-
+        else:
+            ## Если не распознано
+            hellp={'text':'Извините, я вас не понимаю','card':{'type':'ItemsList','header':{'text':'Извините, я вас не понимаю','tts':'Извините, я вас не понимаю'},
+                'items':[
+                    {'button':{'text':'Случайная новость','payload':{'text':'Случайная новость'}},
+                        'title':'Случайная новость🎲',
+                        'tts':'Случайная новость, показываает одну из последних новостей',
+                    },
+                    {'button':{'text':'Последнии новости','payload':{'text':'Последнии новости'}},
+                        'title':'Последнии новости🕐',
+                        'tts':'Последнии новости, покажет пять последних новостей',
+                    },
+                    {'button':{'text':'Смотреть номер','payload':{'text':'Смотреть номер'}},
+                        'title':'Смотреть номер👀',
+                        'tts':'Смотреть номер, зачитает загаловки самых интерсных статей из последнего номера',
+                    },
+                ]
+            }}
+            res['response'].update(hellp)
 
 if __name__ == '__main__':
     app.run()
