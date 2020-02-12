@@ -73,10 +73,16 @@ def main():
 	url = 'https://resbash.ru'
 	r = requests.get(url+'/gazeta/')
 	soup = BeautifulSoup(r.text, 'lxml')
-
-	gaz = str(soup.find('a', class_='gazeta-link').get('href'))
+	q = soup.findAll('a', class_='gazeta-link')
+	gaz = str(q[0].get('href'))
 	r = requests.get(url+gaz)
 	soup = BeautifulSoup(r.text, 'lxml')
+
+	#если последния статья не открыта
+	if len(soup.findAll('div', class_='page-news__name'))==0:
+		gaz = str(q[1].get('href'))
+		r = requests.get(url+gaz)
+		soup = BeautifulSoup(r.text, 'lxml')
 
 	#заголовки 
 	stat = soup.findAll('div', class_='page-news__name')
